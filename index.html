@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathe & Reflect - Wellness Dashboard</title>
+    
+    <!-- External Animation & Font Libraries -->
+    <link href="https://unpkg.com/aos@2/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Quicksand:wght@300;400;500;600&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Contemporary Earthy Meditation Palette */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(230, 225, 215, 0.5);
+            --text-dark: #6e5d4f;
+            --text-light: #8e8275;
+            
+            /* Earthy Palette Accents */
+            --earth-brown: #a08c6e;
+            --sage-earth: #939e85;
+            --clay-red: #be9283;
+            
+            /* Soft Icon Backgrounds */
+            --journal-icon-bg: #f7f3ed;
+            --breathe-icon-bg: #edf2eb;
+            --tracker-icon-bg: #fcf3f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            
+            /* Main Page Background Using 9M.JPG */
+            background: linear-gradient(rgba(245, 242, 237, 0.25), rgba(245, 242, 237, 0.25)), 
+                        url('images/9M.JPG') no-repeat center center fixed;
+            background-size: cover;
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 40px 20px;
+        }
+
+        /* Central Glass Container to emulate the screenshot border look */
+        .main-board-wrapper {
+            width: 100%;
+            max-width: 1050px;
+            background: rgba(253, 251, 247, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 32px;
+            box-shadow: 0 20px 50px rgba(110, 93, 79, 0.05);
+            padding: 50px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* Horizontal Layout for Hero Section */
+        .hero-section {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            text-align: left;
+            gap: 25px;
+            width: 100%;
+            padding: 15px 10px;
+        }
+
+        /* White Shadowed Container for the Lottie Animation */
+        .lottie-box-wrapper {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 12px;
+            box-shadow: 0 10px 30px rgba(160, 140, 120, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 150px;
+            flex-shrink: 0;
+        }
+
+        .lottie-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .greeting-text-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .greeting-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 3.2rem;
+            color: #8c7662;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+
+        .greeting-sub {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .greeting-sub span {
+            font-weight: 700;
+            color: #8c7662;
+        }
+
+        /* Dashboard Navigation Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+
+        /* Exact Aesthetic Cards from the Screenshot */
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 35px 25px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        /* Colored Base Shadow Accent Lines */
+        .card.journal { border-bottom: 5px solid var(--earth-brown); }
+        .card.breathe { border-bottom: 5px solid var(--sage-earth); }
+        .card.tracker { border-bottom: 5px solid var(--clay-red); }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(140, 118, 98, 0.08);
+        }
+
+        /* Custom Aesthetic Square Icon Accents */
+        .icon-box {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+        }
+        
+        .card.journal .icon-box { background-color: var(--journal-icon-bg); }
+        .card.breathe .icon-box { background-color: var(--breathe-icon-bg); }
+        .card.tracker .icon-box { background-color: var(--tracker-icon-bg); }
+
+        .icon-box svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .card-content h3 {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #7c6857;
+            margin-bottom: 8px;
+        }
+
+        .card-content p {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        /* Elegant Quote Block Styling */
+        .quote-section {
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .quote-box {
+            font-family: 'Lora', serif;
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--text-light);
+            background: #f0eae1;
+            border-left: 5px solid var(--earth-brown);
+            padding: 24px 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .main-board-wrapper { padding: 30px 20px; gap: 30px; }
+            .hero-section { flex-direction: column; text-align: center; gap: 15px; }
+            .greeting-title { font-size: 2.4rem; }
+            .greeting-sub { font-size: 1.1rem; }
+            .card { padding: 25px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Aesthetic Wrapper Pane -->
+    <div class="main-board-wrapper">
+        
+        <!-- Welcoming Hero Block with Sunrise_3.lottie -->
+        <header class="hero-section" data-aos="fade-down">
+            <div class="lottie-box-wrapper">
+                <div class="lottie-container">
+                    <dotlottie-player 
+                        src="Sunrise.lottie" 
+                        background="transparent" 
+                        speed="1" 
+                        style="width: 100%; height: 100%;" 
+                        loop 
+                        autoplay>
+                    </dotlottie-player>
+                </div>
+            </div>
+            <div class="greeting-text-container">
+                <h1 class="greeting-title" id="greeting">Good Morning.</h1>
+                <p class="greeting-sub" id="subGreeting">Welcome back, <span id="usernameSlot">Sujeeth</span></p>
+            </div>
+        </header>
+
+        <!-- Features Navigation Grid with Aesthetic Icons -->
+        <main class="dashboard-grid">
+            
+            <!-- Journal Feature Card -->
+            <a href="NewLayout.html" class="card journal" data-aos="fade-up" data-aos-delay="100">
+                <div class="icon-box">
+                    <!-- Custom Styled Journal Pen/Pad SVG -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--earth-brown)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h3 id="card1Title">Journal</h3>
+                    <p id="card1Desc">15-minute guided reset</p>
+                </div>
+            </a>
+
+            <!-- Breathe Feature Card -->
+            <a href="breathe.html" class="card breathe" data-aos="fade-up" data-aos-delay="200">
+                <div class="icon-box">
+                    <!-- Concentric Circles Meditative Breathing SVG -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--sage-earth)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="6"></circle>
+                        <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h3 id="card2Title">Breathe</h3>
+                    <p id="card2Desc">Quick calming exercises</p>
+                </div>
+            </a>
+
+            <!-- Tracker Feature Card -->
+            <a href="tracker.html" class="card tracker" data-aos="fade-up" data-aos-delay="300">
+                <div class="icon-box">
+                    <!-- Calming Energy Inward Arrow SVG -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--clay-red)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h3 id="card3Title">Tracker</h3>
+                    <p id="card3Desc">Log your energy today</p>
+                </div>
+            </a>
+            
+        </main>
+
+        <!-- Dynamic Meditation Quote Segment -->
+        <section class="quote-section" data-aos="fade-up" data-aos-delay="400">
+            <div class="quote-box" id="quoteBox">"You are exactly where you need to be."</div>
+        </section>
+        
+    </div>
+
+    <!-- Script Resource Links -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://unpkg.com/aos@2/dist/aos.js"></script>
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.1/dist/dotlottie-player.js"></script>
+    
+    <script src="auth.js"></script>
+    <script src="dataStore.js"></script>
+    <script src="components.js"></script>
+    <script src="dashboard.js"></script>
+    
+    <script>
+        // Init reveal transitions
+        AOS.init({
+            duration: 1000,
+            once: true,
+            easing: 'ease-out-cubic'
+        });
+    </script>
+</body>
+</html>

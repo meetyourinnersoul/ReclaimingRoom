@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathe & Reflect - Habit Calendar Archive</title>
+    <link href="https://unpkg.com/aos@2/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Quicksand:wght@300;400;500;600&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass-bg: rgba(250, 247, 243, 0.6);
+            --glass-border: rgba(180, 160, 140, 0.5);
+            --text-dark: #3a3a3a;
+            --text-light: #6b6b6b;
+            --earth-brown: #8b7355;
+            --warm-taupe: #a89968;
+            --sage-earth: #8a9a7b;
+            --clay-red: #b8735d;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Quicksand', sans-serif; }
+        body {
+            background: linear-gradient(rgba(244, 239, 233, 0.4), rgba(229, 222, 212, 0.4)), url('images/9M.JPG') no-repeat center center fixed;
+            background-size: cover; color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; padding-bottom: 60px;
+        }
+        .header-bar { width: 100%; max-width: 1200px; padding: 20px 40px; display: flex; justify-content: flex-end; align-items: center; z-index: 10; }
+        .lang-select { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 8px 16px; border-radius: 20px; color: var(--text-dark); font-size: 0.9rem; cursor: pointer; outline: none; }
+        .main-nav { background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); padding: 15px 40px; border-radius: 40px; display: flex; gap: 30px; align-items: center; margin-bottom: 40px; box-shadow: 0 8px 32px 0 rgba(139, 115, 85, 0.15); z-index: 100; position: sticky; top: 0; }
+        .main-nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 0.95rem; padding: 8px 16px; border-radius: 20px; transition: all 0.3s ease; }
+        .main-nav a:hover, .main-nav a.active { background: var(--earth-brown); color: #ffffff; }
+        
+        .archive-container { width: 90%; max-width: 850px; background: rgba(250, 247, 243, 0.75); backdrop-filter: blur(20px); border: 1px solid rgba(180, 160, 140, 0.6); border-radius: 28px; padding: 40px; box-shadow: 0 12px 40px rgba(139, 115, 85, 0.1); text-align: center; }
+        h1 { font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--earth-brown); margin-bottom: 5px; }
+        .subtitle { font-size: 1.05rem; color: var(--text-light); margin-bottom: 30px; }
+        
+        /* Calendar UI Matrix Elements */
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px; }
+        .cal-nav-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-dark); transition: all 0.2s; }
+        .cal-nav-btn:hover { background: #ffffff; border-color: var(--earth-brown); }
+        .month-title { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--earth-brown); }
+        
+        .weekdays-grid { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 10px; font-weight: 700; color: var(--text-light); font-size: 0.9rem; }
+        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+        .calendar-day { background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(180, 160, 140, 0.2); aspect-ratio: 1; border-radius: 12px; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; cursor: default; transition: all 0.2s ease; }
+        .calendar-day.has-data { cursor: pointer; background: rgba(255, 255, 255, 0.8); border-color: var(--glass-border); }
+        .calendar-day.has-data:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(139, 115, 85, 0.12); border-color: var(--earth-brown); }
+        .calendar-day.empty { opacity: 0.2; pointer-events: none; }
+        .day-num { font-weight: 600; font-size: 1rem; color: var(--text-dark); }
+        
+        /* Subtle Color Habit Tracking Dot Status Containers */
+        .indicator-dots { display: flex; gap: 4px; justify-content: center; width: 100%; min-height: 8px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+        .dot.tracker-dot { background: var(--sage-earth); }
+        .dot.text-dot { background: var(--warm-taupe); }
+        .dot.voice-dot { background: var(--clay-red); }
+
+        /* Detail Modal Overlay Panel */
+        .drawer-panel { display: none; margin-top: 30px; background: rgba(255,255,255,0.7); border: 1px solid var(--glass-border); border-radius: 18px; padding: 25px; text-align: left; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .drawer-date { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--earth-brown); margin-bottom: 15px; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; }
+        .drawer-section { margin-bottom: 15px; background: rgba(255,255,255,0.5); padding: 15px; border-radius: 12px; border-left: 4px solid var(--glass-border); }
+        .drawer-section.t-sec { border-left-color: var(--sage-earth); }
+        .drawer-section.j-sec { border-left-color: var(--warm-taupe); }
+        .drawer-section.v-sec { border-left-color: var(--clay-red); }
+        .sec-lbl { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); margin-bottom: 6px; font-family: 'Montserrat', sans-serif; }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <select class="lang-select" id="langSelect" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+        </select>
+    </div>
+    <nav class="main-nav">
+        <a href="index.html" id="navHome">Home</a>
+        <a href="NewLayout.html" id="navJournal">Journal Timer</a>
+        <a href="breathe.html" id="navBreathe">Breathe</a>
+        <a href="tracker.html" id="navTracker">Tracker</a>
+        <a href="archive.html" id="navArchive" class="active">Archive</a>
+        <a href="settings.html" id="navSettings">Settings</a>
+        <div id="googleBtnContainer" style="display: inline-block; align-self: center; margin-left: 10px;"></div>
+    </nav>
+
+    <div class="archive-container" data-aos="fade-up">
+        <h1 id="archTitle">Wellness Calendar Archive</h1>
+        <p class="subtitle" id="archDesc">Look back at your historic matrix logs and consistent patterns.</p>
+        
+        <div class="calendar-header">
+            <button class="cal-nav-btn" onclick="adjustMonth(-1)">‹</button>
+            <div class="month-title" id="monthTitle">July 2026</div>
+            <button class="cal-nav-btn" onclick="adjustMonth(1)">›</button>
+        </div>
+
+        <div class="weekdays-grid" id="weekdaysRow">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+        <div class="days-grid" id="daysGrid"></div>
+
+        <div class="drawer-panel" id="detailDrawer"></div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2/dist/aos.js"></script>
+    <script src="auth.js"></script>
+    <script src="dataStore.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        const i18n = {
+            en: { navHome: "Home", navJournal: "Journal Timer", navBreathe: "Breathe", navTracker: "Tracker", navArchive: "Archive", navSettings: "Settings", archTitle: "Wellness Calendar Archive", archDesc: "Look back at your historic matrix logs and consistent patterns.", weekdays: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], months: ["January","February","March","April","May","June","July","August","September","October","November","December"] },
+            hi: { navHome: "मुख्य पृष्ठ", navJournal: "जर्नल टाइमर", navBreathe: "सांस लें", navTracker: "ट्रैकर", navArchive: "संग्रह", navSettings: "सेッティング्स", archTitle: "कैलेंडर संग्रह", archDesc: "अपने पुराने दैनिक लॉग और आदतों को देखें।", weekdays: ["रवि","सोम","मंगल","बुध","गुरु","शुक्र","शनि"], months: ["जनवरी","फरवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"] },
+            ta: { navHome: "முகப்பு", navJournal: "நேரங்காட்டி", navBreathe: "சுவாசி", navTracker: "கண்காணிப்பான்", navArchive: "காப்பகம்", navSettings: "அமைப்புகள்", archTitle: "நாட்காட்டி காப்பகம்", archDesc: "உங்கள் வரலாற்றுப் பதிவுகளையும் பழக்கவழக்கங்களையும் திரும்பிப் பாருங்கள்.", weekdays: ["ஞாயிறு","திங்கள்","செவ்வாய்","புதன்","வியாழன்","வெள்ளி","சனி"], months: ["ஜனவரி","பிப்ரவரி","மார்ச்","ஏப்ரல்","மே","ஜூன்","ஜூலை","ஆகஸ்ட்","செப்டம்பர்","அக்டோபர்","நவம்பர்","டிசம்பர்"] }
+        };
+
+        let currentLang = 'en', currentCalendarDate = new Date();
+
+        function changeLanguage() {
+            currentLang = document.getElementById('langSelect').value;
+            const t = i18n[currentLang];
+            document.getElementById('navHome').innerText = t.navHome;
+            document.getElementById('navJournal').innerText = t.navJournal;
+            document.getElementById('navBreathe').innerText = t.navBreathe;
+            document.getElementById('navTracker').innerText = t.navTracker;
+            document.getElementById('navArchive').innerText = t.navArchive;
+            document.getElementById('navSettings').innerText = t.navSettings;
+            document.getElementById('archTitle').innerText = t.archTitle;
+            document.getElementById('archDesc').innerText = t.archDesc;
+            
+            // Re-render weekdays header row elements text alignment mappings
+            const wkDivs = document.getElementById('weekdaysRow').children;
+            for(let i=0; i<7; i++) wkDivs[i].innerText = t.weekdays[i];
+            renderCalendarGrid();
+        }
+
+        function adjustMonth(offset) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + offset);
+            renderCalendarGrid();
+            document.getElementById('detailDrawer').style.display = 'none';
+        }
+
+        function renderCalendarGrid() {
+            const grid = document.getElementById('daysGrid');
+            grid.innerHTML = "";
+            
+            const history = DataStore.getAllHistory();
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            
+            document.getElementById('monthTitle').innerText = `${i18n[currentLang].months[month]} ${year}`;
+            
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+            
+            // Render blank padding buffer spaces inside week container rows
+            for(let i = 0; i < firstDayIndex; i++) {
+                let emptyCell = document.createElement('div');
+                emptyCell.className = "calendar-day empty";
+                grid.appendChild(emptyCell);
+            }
+
+            // Loop active real numerical tracking grid cells loop logic
+            for(let day = 1; day <= totalDays; day++) {
+                const dayString = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                const dayData = history[dayString];
+                
+                let dayCell = document.createElement('div');
+                dayCell.className = "calendar-day";
+                dayCell.innerHTML = `<span class="day-num">${day}</span>`;
+                
+                let dotsContainer = document.createElement('div');
+                dotsContainer.className = "indicator-dots";
+                
+                if (dayData) {
+                    dayCell.classList.add('has-data');
+                    if (dayData.tracker) dotsContainer.innerHTML += `<span class="dot tracker-dot"></span>`;
+                    if (dayData.journal_text) dotsContainer.innerHTML += `<span class="dot text-dot"></span>`;
+                    if (dayData.journal_voice) dotsContainer.innerHTML += `<span class="dot voice-dot"></span>`;
+                    
+                    dayCell.onclick = () => showDayDetails(dayString, dayData);
+                }
+                
+                dayCell.appendChild(dotsContainer);
+                grid.appendChild(dayCell);
+            }
+        }
+
+        function showDayDetails(dateKey, data) {
+            const drawer = document.getElementById('detailDrawer');
+            drawer.style.display = 'block';
+            
+            let htmlStr = `<div class="drawer-date">${dateKey}</div>`;
+            
+            if (data.tracker) {
+                htmlStr += `
+                <div class="drawer-section t-sec">
+                    <div class="sec-lbl">📊 Tracker Metrics</div>
+                    <p><strong>Mood:</strong> ${data.tracker.mood} | <strong>Water:</strong> ${data.tracker.water} Glasses | <strong>Sleep:</strong> ${data.tracker.sleep} Hours</p>
+                </div>`;
+            }
+            if (data.journal_text) {
+                htmlStr += `
+                <div class="drawer-section j-sec">
+                    <div class="sec-lbl">📝 Written Reflection (${data.journal_text.duration || 'N/A'})</div>
+                    <p style="font-style:italic; color:var(--text-light); margin-bottom:4px;">${data.journal_text.prompt}</p>
+                    <p>${data.journal_text.text}</p>
+                </div>`;
+            }
+            if (data.journal_voice) {
+                const audioURL = localStorage.getItem(data.journal_voice.audioId);
+                htmlStr += `
+                <div class="drawer-section v-sec">
+                    <div class="sec-lbl">🎙️ Voice Note Journal (${data.journal_voice.duration || 'N/A'})</div>
+                    <p style="font-style:italic; color:var(--text-light); margin-bottom:8px;">${data.journal_voice.prompt}</p>
+                    ${audioURL ? `<audio controls src="${audioURL}" style="width:100%; margin-top:5px;"></audio>` : `<p style="color:var(--clay-red); font-size:0.9rem;">⚠️ Recording reference stream uncoupled from local context index.</p>`}
+                </div>`;
+            }
+            
+            drawer.innerHTML = htmlStr;
+            drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Catch cross-frame mutations to re-index live active visual habit states seamlessly
+        window.addEventListener('wellnessDataUpdated', renderCalendarGrid);
+        window.addEventListener('DOMContentLoaded', changeLanguage);
+    </script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15-Minute Reset & Reflect</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+        /* Contemporary Palette */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.65); /* Slightly more opaque for readability */
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --text-dark: #2c3e50;
+            --primary-blue: #3498db;
+            --primary-yellow: #f1c40f;
+            --accent: #2980b9;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Righteous', cursive;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            
+            /* THIS IS THE MAGIC TRICK */
+            /* The rgba(255,255,255, 0.7) adds a 70% white wash over your picture */
+            background-image: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* --- Glassmorphism UI --- */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 650px;
+            width: 90%;
+            margin-top: 6vh;
+            margin-bottom: 6vh;
+            text-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--accent);
+            font-weight: 400;
+            margin-top: 0;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .timer-display {
+            font-size: 4.5rem;
+            color: var(--accent);
+            margin: 15px 0;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .phase-card {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary-yellow);
+            min-height: 100px;
+            transition: all 0.5s ease;
+            text-align: left;
+        }
+
+        .phase-title {
+            font-size: 1.3rem;
+            color: var(--accent);
+            margin-top: 0;
+            font-weight: 600;
+        }
+
+        .phase-instruction {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #4a5568;
+            margin-bottom: 0;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            resize: vertical;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        textarea:focus {
+            outline: none;
+            background: #ffffff;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--accent);
+            border: 1px solid white;
+            padding: 12px 25px;
+            font-size: 0.95rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        button:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .primary-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+        }
+
+        .primary-btn:hover {
+            background: #2980b9;
+            color: white;
+        }
+
+        .audio-btn {
+            background: #f1c40f;
+            color: #fff;
+            border: none;
+        }
+        
+        .audio-btn:hover {
+            background: #f39c12;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Breathe & Reflect</h1>
+        
+        <div class="timer-display" id="timer">15:00</div>
+
+        <div class="phase-card" id="phaseCard">
+            <h2 class="phase-title" id="phaseTitle">Ready when you are.</h2>
+            <p class="phase-instruction" id="phaseDesc">Find a quiet space, get comfortable, and click Start to begin your 15-minute reset.</p>
+        </div>
+
+        <textarea id="journalEntry" placeholder="Your journal space. It is safe to be completely honest here..."></textarea>
+
+        <div class="controls">
+            <button class="primary-btn" id="startBtn" onclick="toggleTimer()">Start Workflow</button>
+            <button class="audio-btn" id="audioBtn" onclick="toggleAudioSettings()">Audio: ON 🔊</button>
+            <button onclick="downloadJournal()">Save Journal</button>
+        </div>
+    </div>
+
+    <script>
+        let timeLeft = 900; 
+        let timerInterval;
+        let isRunning = false;
+        let audioEnabled = true;
+
+        // Custom User Voice Recordings
+        const voiceMeditation = new Audio('Meditation.m4a');
+        const voiceDump = new Audio('Dump.m4a');
+        const voiceIntention = new Audio('Intention.m4a');
+        
+        // Custom Ambient Background Sound
+        const backgroundMusic = new Audio('Background.mp3');
+        backgroundMusic.loop = true; 
+        backgroundMusic.volume = 0.1; 
+        
+        voiceMeditation.volume = 1.0;
+        voiceDump.volume = 1.0;
+        voiceIntention.volume = 1.0;
+
+        const timerDisplay = document.getElementById('timer');
+        const phaseTitle = document.getElementById('phaseTitle');
+        const phaseDesc = document.getElementById('phaseDesc');
+        const startBtn = document.getElementById('startBtn');
+        const phaseCard = document.getElementById('phaseCard');
+        const audioBtn = document.getElementById('audioBtn');
+
+        const phases = {
+            meditation: {
+                id: "meditation",
+                title: "Phase 1: Grounding Meditation",
+                desc: "Close your eyes. Drop your shoulders away from your ears. Inhale deeply for 4 seconds, hold for 4, exhale for 6. Let the noise of the day fade away. There is nowhere else you need to be right now.",
+                color: "#3498db" 
+            },
+            dump: {
+                id: "dump",
+                title: "Phase 2: The Brain Dump",
+                desc: "Open your eyes. Write down whatever is crowding your mind. Do not censor yourself. Are you tired? Frustrated? Overwhelmed? Put it all in the text box below to get it out of your head.",
+                color: "#f1c40f" 
+            },
+            intention: {
+                id: "intention",
+                title: "Phase 3: Intention Setting",
+                desc: "Take a deep breath. Shift your focus. Write down one thing you are proud of yourself for today, and set one gentle intention for how you want to feel for the rest of the day.",
+                color: "#2ecc71" 
+            },
+            done: {
+                id: "done",
+                title: "You did it.",
+                desc: "Your 15 minutes are complete. Thank yourself for showing up. You can continue writing, or save your entry below.",
+                color: "#95a5a6" 
+            }
+        };
+
+        function playCustomVoice(phaseId) {
+            if (!audioEnabled) return;
+            
+            voiceMeditation.pause();
+            voiceMeditation.currentTime = 0;
+            voiceDump.pause();
+            voiceDump.currentTime = 0;
+            voiceIntention.pause();
+            voiceIntention.currentTime = 0;
+
+            if (phaseId === "meditation") {
+                voiceMeditation.play().catch(e => console.log("Audio file missing or blocked:", e));
+            } else if (phaseId === "dump") {
+                voiceDump.play().catch(e => console.log("Audio file missing or blocked:", e));
+            } else if (phaseId === "intention") {
+                voiceIntention.play().catch(e => console.log("Audio file missing or blocked:", e));
+            }
+        }
+
+        function toggleAudioSettings() {
+            audioEnabled = !audioEnabled;
+            if (audioEnabled) {
+                audioBtn.innerText = "Audio: ON 🔊";
+                if (isRunning) backgroundMusic.play().catch(e => console.log("Audio play blocked:", e));
+            } else {
+                audioBtn.innerText = "Audio: OFF 🔇";
+                voiceMeditation.pause();
+                voiceDump.pause();
+                voiceIntention.pause();
+                backgroundMusic.pause();
+            }
+        }
+
+        function updateUI() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            timerDisplay.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            if (timeLeft > 600) {
+                setPhase(phases.meditation);
+            } else if (timeLeft === 600) {
+                setPhase(phases.dump); 
+            } else if (timeLeft <= 600 && timeLeft > 300) {
+                setPhase(phases.dump);
+            } else if (timeLeft === 300) {
+                setPhase(phases.intention); 
+            } else if (timeLeft <= 300 && timeLeft > 0) {
+                setPhase(phases.intention);
+            } else if (timeLeft === 0) {
+                setPhase(phases.done);
+                clearInterval(timerInterval);
+                isRunning = false;
+                startBtn.innerText = "Workflow Complete";
+                startBtn.disabled = true;
+                backgroundMusic.pause();
+            }
+        }
+
+        function setPhase(phaseObj) {
+            if (phaseTitle.innerText !== phaseObj.title) {
+                phaseTitle.innerText = phaseObj.title;
+                phaseDesc.innerText = phaseObj.desc;
+                phaseCard.style.borderLeftColor = phaseObj.color;
+                
+                playCustomVoice(phaseObj.id);
+            }
+        }
+
+        function toggleTimer() {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                startBtn.innerText = "Resume Workflow";
+                backgroundMusic.pause();
+                
+                voiceMeditation.pause();
+                voiceDump.pause();
+                voiceIntention.pause();
+            } else {
+                if (timeLeft === 900) {
+                    setPhase(phases.meditation);
+                }
+                
+                if (audioEnabled) {
+                    backgroundMusic.play().catch(e => console.log("Audio play blocked:", e));
+                }
+                
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateUI();
+                }, 1000);
+                startBtn.innerText = "Pause";
+            }
+            isRunning = !isRunning;
+        }
+
+        function downloadJournal() {
+            const text = document.getElementById('journalEntry').value;
+            if (!text) {
+                alert("Your journal is empty!");
+                return;
+            }
+            const date = new Date().toLocaleDateString().replace(/\//g, '-');
+            const blob = new Blob([text], { type: 'text/plain' });
+            const anchor = document.createElement('a');
+            anchor.download = `Wellness-Journal-${date}.txt`;
+            anchor.href = window.URL.createObjectURL(blob);
+            anchor.click();
+        }
+    </script>
+</body>
+</html>

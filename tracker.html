@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathe & Reflect - Energy Tracker</title>
+    <link href="https://unpkg.com/aos@2/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Quicksand:wght@300;400;500;600&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass-bg: rgba(250, 247, 243, 0.6);
+            --glass-border: rgba(180, 160, 140, 0.5);
+            --text-dark: #3a3a3a;
+            --text-light: #6b6b6b;
+            --earth-brown: #8b7355;
+            --warm-taupe: #a89968;
+            --sage-earth: #8a9a7b;
+            --clay-red: #b8735d;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Quicksand', sans-serif; }
+        body {
+            background: linear-gradient(rgba(244, 239, 233, 0.4), rgba(229, 222, 212, 0.4)), url('images/5M.JPG') no-repeat center center fixed;
+            background-size: cover; color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; padding-bottom: 60px;
+        }
+        .header-bar { width: 100%; max-width: 1200px; padding: 20px 40px; display: flex; justify-content: flex-end; align-items: center; z-index: 10; }
+        .lang-select { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 8px 16px; border-radius: 20px; color: var(--text-dark); font-size: 0.9rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s ease; }
+        .lang-select:hover { border-color: var(--earth-brown); }
+        .main-nav { background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--glass-border); padding: 15px 40px; border-radius: 40px; display: flex; gap: 30px; align-items: center; margin-bottom: 40px; box-shadow: 0 8px 32px 0 rgba(139, 115, 85, 0.15); z-index: 100; position: sticky; top: 0; }
+        .main-nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 0.95rem; padding: 8px 16px; border-radius: 20px; transition: all 0.3s ease; }
+        .main-nav a:hover, .main-nav a.active { background: var(--earth-brown); color: #ffffff; }
+        .container { position: relative; z-index: 10; max-width: 650px; width: 90%; margin-top: 2vh; margin-bottom: 6vh; text-align: center; background: rgba(250, 247, 243, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(180, 160, 140, 0.6); border-radius: 28px; padding: 40px; box-shadow: 0 12px 40px rgba(139, 115, 85, 0.1); }
+        .tracker-banner { width: 100%; height: 140px; object-fit: cover; border-radius: 16px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid var(--glass-border); }
+        h1 { font-family: 'Montserrat', sans-serif; size: 2.2rem; font-weight: 800; color: var(--earth-brown); margin-bottom: 10px; }
+        .desc { font-size: 1.1rem; color: var(--text-light); margin-bottom: 30px; }
+        .track-section { background: rgba(255, 255, 255, 0.7); padding: 20px; border-radius: 16px; margin-bottom: 20px; text-align: left; border-left: 5px solid var(--warm-taupe); border-top: 1px solid rgba(180, 160, 140, 0.2); border-right: 1px solid rgba(180, 160, 140, 0.2); border-bottom: 1px solid rgba(180, 160, 140, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .track-section.water-sec { border-left-color: var(--sage-earth); }
+        .track-section.sleep-sec { border-left-color: var(--clay-red); }
+        .section-title { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--earth-brown); margin: 0 0 15px 0; }
+        .mood-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .mood-btn { background: rgba(255, 255, 255, 0.9); border: 1px solid var(--glass-border); padding: 15px; border-radius: 12px; cursor: pointer; font-size: 1rem; color: var(--text-dark); font-weight: 500; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .mood-btn:hover { background: #ffffff; border-color: var(--earth-brown); transform: translateY(-1px); }
+        .mood-btn.active { background: var(--warm-taupe); color: white; border-color: var(--warm-taupe); font-weight: 700; box-shadow: 0 4px 12px rgba(168, 153, 104, 0.3); }
+        .counter-controls { display: flex; align-items: center; gap: 20px; }
+        .circle-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--sage-earth); color: white; font-size: 1.3rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(138, 154, 123, 0.3); }
+        .circle-btn.sleep-btn { background: var(--clay-red); box-shadow: 0 2px 8px rgba(184, 115, 93, 0.3); }
+        .circle-btn:hover { transform: scale(1.1); }
+        .counter-display { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--text-dark); min-width: 45px; text-align: center; }
+        .save-btn { background: var(--earth-brown); color: white; border: none; padding: 14px 50px; font-size: 1.1rem; font-weight: 600; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; margin-top: 10px; box-shadow: 0 6px 20px rgba(139, 115, 85, 0.25); }
+        .save-btn:hover { background: var(--warm-taupe); transform: translateY(-2px); }
+        .status-msg { color: var(--sage-earth); font-weight: 700; margin-top: 15px; opacity: 0; transition: opacity 0.3s ease; }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <select class="lang-select" id="langSelect" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+        </select>
+    </div>
+    <nav class="main-nav">
+        <a href="index.html" id="navHome">Home</a>
+        <a href="NewLayout.html" id="navJournal">Journal Timer</a>
+        <a href="breathe.html" id="navBreathe">Breathe</a>
+        <a href="tracker.html" id="navTracker" class="active">Tracker</a>
+        <a href="archive.html" id="navArchive">Archive</a>
+        <a href="settings.html" id="navSettings">Settings</a>
+        <div id="googleBtnContainer" style="display: inline-block; align-self: center; margin-left: 10px;"></div>
+    </nav>
+
+    <div class="container" data-aos="fade-up">
+        <img src="images/7M.JPG" alt="Daily Journey" class="tracker-banner">
+        <h1 id="ui-title">Energy Tracker</h1>
+        <p class="desc" id="ui-desc">Check in with yourself. How are you feeling today?</p>
+        <div class="track-section">
+            <h3 class="section-title" id="secMood">Current Mood</h3>
+            <div class="mood-grid">
+                <div class="mood-btn" onclick="setMood('Drained', this)" id="mood1">😴 Drained</div>
+                <div class="mood-btn" onclick="setMood('Okay', this)" id="mood2">😐 Okay</div>
+                <div class="mood-btn" onclick="setMood('Peaceful', this)" id="mood3">😌 Peaceful</div>
+                <div class="mood-btn" onclick="setMood('Energized', this)" id="mood4">⚡ Energized</div>
+            </div>
+        </div>
+        <div class="track-section water-sec">
+            <h3 class="section-title" id="secWater">Water (Glasses)</h3>
+            <div class="counter-controls">
+                <button class="circle-btn" onclick="updateWater(-1)">-</button>
+                <div class="counter-display" id="waterCount">0</div>
+                <button class="circle-btn" onclick="updateWater(1)">+</button>
+            </div>
+        </div>
+        <div class="track-section sleep-sec">
+            <h3 class="section-title" id="secSleep">Sleep (Hours)</h3>
+            <div class="counter-controls">
+                <button class="circle-btn sleep-btn" onclick="updateSleep(-0.5)">-</button>
+                <div class="counter-display" id="sleepCount">7.0</div>
+                <button class="circle-btn sleep-btn" onclick="updateSleep(0.5)">+</button>
+            </div>
+        </div>
+        <button class="save-btn" id="saveBtn" onclick="saveEntry()">Save Entry</button>
+        <div class="status-msg" id="statusMsg">Saved successfully!</div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2/dist/aos.js"></script>
+    <script src="auth.js"></script>
+    <script src="dataStore.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+        const i18n = {
+            en: { navHome: "Home", navJournal: "Journal Timer", navBreathe: "Breathe", navTracker: "Tracker", navArchive: "Archive", navSettings: "Settings", title: "Energy Tracker", desc: "Check in with yourself. How are you feeling today?", secMood: "Current Mood", secWater: "Water (Glasses)", secSleep: "Sleep (Hours)", m1: "😴 Drained", m2: "😐 Okay", m3: "😌 Peaceful", m4: "⚡ Energized", saveBtn: "Save Entry", savedMsg: "Entry saved successfully!" },
+            hi: { navHome: "मुख्य पृष्ठ", navJournal: "जर्नल टाइमर", navBreathe: "सांस लें", navTracker: "ट्रैकर", navArchive: "संग्रह", navSettings: "सेटिंग्स", title: "ऊर्जा ट्रैकर", desc: "खुद को जांचें। आज आप कैसा महसूस कर रहे हैं?", secMood: "वर्तमान मनोदशा", secWater: "पानी (गिलास)", secSleep: "नींद (घंटे)", m1: "😴 थका हुआ", m2: "😐 ठीक", m3: "😌 शांत", m4: "⚡ ऊर्जावान", saveBtn: "प्रविष्टि सहेजें", savedMsg: "प्रविष्टि सफलतापूर्वक सहेजी गई!" },
+            ta: { navHome: "முகப்பு", navJournal: "நேரங்காட்டி", navBreathe: "சுவாசி", navTracker: "கண்காணிப்பான்", navArchive: "காப்பகம்", navSettings: "அமைப்புகள்", title: "ஆற்றல் கண்காணிப்பான்", desc: "உங்களை பரிசோதிக்கவும். இன்று நீங்கள் எப்படி உணர்கிறீர்கள்?", secMood: "தற்போதைய மனநிலை", secWater: "தண்ணீர் (குவளைகள்)", secSleep: "தூக்கம் (மணிநேரம்)", m1: "😴 சோர்வு", m2: "😐 பரவாயில்லை", m3: "😌 அமைதி", m4: "⚡ சுறுசுறுப்பு", saveBtn: "பதிவைச் சேமி", savedMsg: "பதிவு வெற்றிகரமாக சேமிக்கப்பட்டது!" }
+        };
+        let currentLang = 'en', selectedMood = "", waterVal = 0, sleepVal = 7.0;
+
+        function changeLanguage() {
+            currentLang = document.getElementById('langSelect').value;
+            const t = i18n[currentLang];
+            document.getElementById('navHome').innerText = t.navHome;
+            document.getElementById('navJournal').innerText = t.navJournal;
+            document.getElementById('navBreathe').innerText = t.navBreathe;
+            document.getElementById('navTracker').innerText = t.navTracker;
+            document.getElementById('navArchive').innerText = t.navArchive;
+            document.getElementById('navSettings').innerText = t.navSettings;
+            document.getElementById('ui-title').innerText = t.title;
+            document.getElementById('ui-desc').innerText = t.desc;
+            document.getElementById('secMood').innerText = t.secMood;
+            document.getElementById('secWater').innerText = t.secWater;
+            document.getElementById('secSleep').innerText = t.secSleep;
+            document.getElementById('mood1').innerText = t.m1;
+            document.getElementById('mood2').innerText = t.m2;
+            document.getElementById('mood3').innerText = t.m3;
+            document.getElementById('mood4').innerText = t.m4;
+            document.getElementById('saveBtn').innerText = t.saveBtn;
+            document.getElementById('statusMsg').innerText = t.savedMsg;
+        }
+        function setMood(m, el) { selectedMood = m; document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
+        function updateWater(c) { waterVal = Math.max(0, waterVal + c); document.getElementById('waterCount').innerText = waterVal; }
+        function updateSleep(c) { sleepVal = Math.min(24, Math.max(0, sleepVal + c)); document.getElementById('sleepCount').innerText = sleepVal.toFixed(1); }
+        
+        function saveEntry() {
+            if (!selectedMood) { alert("Please select a mood before saving!"); return; }
+            DataStore.saveTracker(selectedMood, waterVal, sleepVal);
+            const sm = document.getElementById('statusMsg');
+            sm.style.opacity = '1'; setTimeout(() => sm.style.opacity = '0', 3000);
+        }
+        changeLanguage();
+    </script>
+</body>
+</html>

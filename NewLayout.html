@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathe & Reflect - 15-Minute Reset & Reflect</title>
+    
+    <link href="https://unpkg.com/aos@2/dist/aos.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Quicksand:wght@300;400;500;600&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Contemporary Earthy Meditation Palette matched from index.html */
+        :root {
+            --glass-bg: rgba(250, 247, 243, 0.6);
+            --glass-border: rgba(180, 160, 140, 0.5);
+            --text-dark: #3a3a3a;
+            --text-light: #6b6b6b;
+            
+            /* Earthy Tones */
+            --earth-brown: #8b7355;
+            --warm-taupe: #a89968;
+            --sage-earth: #8a9a7b;
+            --clay-red: #b8735d;
+            
+            --max-width: 1200px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(rgba(250, 247, 243, 0.15), rgba(250, 247, 243, 0.15)), url('images/5M.JPG');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Quicksand', sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            transition: background 1.5s ease-in-out;
+        }
+
+        .container {
+            width: 100%;
+            max-width: var(--max-width);
+            padding: 20px 40px 60px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* Banner Hero Layout */
+        .hero-banner {
+            width: 100%;
+            height: 220px;
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 12px 40px rgba(139, 115, 85, 0.15);
+            border: 1px solid var(--glass-border);
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(58, 58, 58, 0.35), rgba(250, 247, 243, 0.1));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 60px;
+        }
+
+        .hero-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #faf7f3;
+            font-weight: 400;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.15);
+        }
+
+        /* Split-View Grid Layout */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 40px;
+            align-items: stretch;
+        }
+
+        @media (max-width: 900px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Glassmorphism Card Panels */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(139, 115, 85, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 36px rgba(139, 115, 85, 0.1);
+        }
+
+        /* Timer UI Elements */
+        .timer-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            border-left: 8px solid var(--earth-brown);
+        }
+
+        .phase-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .phase-header p {
+            font-family: 'Lora', Georgia, serif;
+            color: var(--text-light);
+            font-style: italic;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .timer-display {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -2px;
+            margin-bottom: 30px;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--text-dark), var(--earth-brown));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Action Buttons Area */
+        .action-button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .btn-action {
+            width: 100%;
+            background: var(--clay-red);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(184, 115, 93, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-action:hover {
+            background: #a3624e;
+            transform: translateY(-2px);
+        }
+
+        /* Secondary Voice Toggle Architecture Style Configurations */
+        .btn-voice-toggle {
+            background: var(--earth-brown);
+            box-shadow: 0 6px 20px rgba(139, 115, 85, 0.25);
+        }
+        .btn-voice-toggle:hover {
+            background: #756046;
+        }
+        .btn-voice-toggle.disabled-state {
+            background: #a8a098;
+            box-shadow: none;
+            opacity: 0.6;
+        }
+
+        /* Voice Note Attachment Canvas Area */
+        .voice-recording-node {
+            margin-top: 15px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        .btn-record-control {
+            background: var(--sage-earth);
+            font-size: 0.95rem;
+            padding: 10px 20px;
+        }
+        .btn-record-control:hover { background: #738465; }
+        .btn-record-control.recording-active {
+            background: #d65a47;
+            animation: rhythmicPulse 1.6s infinite ease-in-out;
+        }
+
+        @keyframes rhythmicPulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.03); opacity: 0.85; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Companion Journal Space Widget Layout */
+        .journal-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .journal-header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .journal-panel h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            color: var(--text-dark);
+        }
+
+        .btn-mic-text {
+            background: var(--warm-taupe);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s ease;
+        }
+        .btn-mic-text:hover { background: #8f8254; }
+        .btn-mic-text.active {
+            background: #d65a47;
+            animation: rhythmicPulse 1.6s infinite ease-in-out;
+        }
+
+        .journal-textarea {
+            width: 100%;
+            flex-grow: 1;
+            min-height: 280px;
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .journal-textarea:focus {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: var(--earth-brown);
+            box-shadow: 0 4px 15px rgba(139, 115, 85, 0.1);
+        }
+
+        .text-meta-info {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Interactive Ambient Video Box Mapping Frame */
+        .ambient-video-wrapper {
+            width: 100%;
+            height: 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+        .ambient-video-wrapper.visible {
+            display: block;
+            opacity: 1;
+            height: 200px;
+            margin-bottom: 15px;
+        }
+        .ambient-video-element {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <script src="components.js"></script> <!-- Injected at top of body -->
+    ...
+    <script src="dataStore.js"></script>
+    <script src="auth.js"></script> <!-- Add this explicitly if it's missing -->
+
+    <div class="container" data-aos="fade-up">
+        <header class="hero-banner">
+            <img src="images/Header.jpg" alt="Meditation Balance" class="hero-img">
+            <div class="hero-overlay">
+                <h1 class="hero-title" id="navTitleText">Reset & Reflect</h1>
+                <p class="hero-subtitle" id="navSubtitleText">Your dedicated 15-minute space for mental alignment and clarity</p>
+            </div>
+        </header>
+
+        <main class="workspace-grid">
+            
+            <section class="glass-card timer-panel" id="phaseCard" data-aos="fade-right" data-aos-delay="100">
+                
+                <div class="ambient-video-wrapper" id="videoContainer">
+                    <video class="ambient-video-element" id="ambientVideo" loop muted playsinline></video>
+                </div>
+
+                <div class="phase-header">
+                    <h2 id="phaseTitle">Ready to Begin</h2>
+                    <p id="phaseDesc">Find a comfortable seating position, ground your thoughts, and click below to begin your structured session.</p>
+                </div>
+                
+                <div class="timer-display" id="timeDisplay">15:00</div>
+                
+                <div class="action-button-group">
+                    <button class="btn-action" id="controlBtn" onclick="toggleTimer()">Start Session</button>
+                    <button class="btn-action btn-voice-toggle" id="audioToggleBtn" onclick="toggleAudioTrackMode()">Voice Guidance: On</button>
+                    
+                    <div class="voice-recording-node">
+                        <button class="btn-action btn-record-control" id="voiceRecordBtn" onclick="toggleVoiceNoteCapture()">Record Voice Note</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-card journal-panel" data-aos="fade-left" data-aos-delay="200">
+                <div class="journal-header-area">
+                    <h3 id="journalWidgetTitle">Stream of Consciousness</h3>
+                    <button class="btn-mic-text" id="micTextBtn" onclick="toggleTextDictationEngine()">Mic on Text: Off</button>
+                </div>
+                
+                <textarea class="journal-textarea" id="journalInput" oninput="trackWritingMetrics()" placeholder="Capture your insights, sensations, or thoughts as they unfold..."></textarea>
+                
+                <div class="text-meta-info">
+                    <span id="charCounter">Characters: 0</span>
+                    <span id="saveStatus">Status: Idle</span>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://unpkg.com/aos@2/dist/aos.js"></script>
+    <script src="dataStore.js"></script>
+
+    <script>
+        // Internationalization Core Dictionary Structure Matrix mapping explicitly definitions
+        const i18nLocal = {
+            en: {
+                navTitleText: "Reset & Reflect",
+                navSubtitleText: "Your dedicated 15-minute space for mental alignment and clarity",
+                readyTitle: "Ready to Begin",
+                readyDesc: "Find a comfortable seating position, ground your thoughts, and click below to begin your structured session.",
+                meditationTitle: "Mindful Immersion",
+                meditationDesc: "Inhale deeply. Soften your shoulders and focus entirely on the space between breaths.",
+                reflectionTitle: "Creative Reflection",
+                reflectionDesc: "Transition your focus toward your journal widget. Allow your thoughts to map directly to text.",
+                doneTitle: "Session Complete",
+                doneDesc: "Take this lingering sensation of clarity out into the rest of your beautiful day.",
+                startBtn: "Start Session",
+                pauseBtn: "Pause",
+                resumeBtn: "Resume",
+                voiceOn: "Voice Guidance: On",
+                voiceOff: "Voice Guidance: Off",
+                journalWidgetTitle: "Stream of Consciousness",
+                placeholderText: "Capture your insights, sensations, or thoughts as they unfold...",
+                btnRecordOff: "Record Voice Note",
+                btnRecordOn: "Stop & Save Voice Note",
+                btnMicOff: "Mic on Text: Off",
+                btnMicOn: "Mic on Text: On"
+            },
+            hi: {
+                navTitleText: "रीसेट और रिफ्लेक्ट",
+                navSubtitleText: "मानसिक संरेखण और स्पष्टता के लिए आपका समर्पित 15 मिनट का स्थान",
+                readyTitle: "शुरू करने के लिए तैयार",
+                readyDesc: "एक आरामदायक बैठने की स्थिति खोजें, अपने विचारों को स्थिर करें, और अपना सत्र शुरू करने के लिए नीचे क्लिक करें।",
+                meditationTitle: "सचेत विसर्जन",
+                meditationDesc: "गहरी सांस लें। अपने कंधों को ढीला छोड़ें और पूरी तरह से सांसों के बीच के स्थान पर ध्यान केंद्रित करें।",
+                reflectionTitle: "रचनात्मक प्रतिबिंब",
+                reflectionDesc: "अपना ध्यान अपने जर्नल विजेट की ओर स्थानांतरित करें। अपने विचारों को सीधे टेक्स्ट में बदलने दें।",
+                doneTitle: "सत्र पूरा हुआ",
+                doneDesc: "स्पष्टता की इस बची हुई अनुभूति को अपने सुंदर दिन के बाकी हिस्सों में ले जाएं।",
+                startBtn: "सत्र शुरू करें",
+                pauseBtn: "विराम",
+                resumeBtn: "जारी रखें",
+                voiceOn: "आवाज मार्गदर्शन: चालू",
+                voiceOff: "आवाज मार्गदर्शन: बंद",
+                journalWidgetTitle: "चेतना की धारा",
+                placeholderText: "अपने विचारों, संवेदनाओं या अंतर्दृष्टि को रिकॉर्ड करें जैसे वे सामने आते हैं...",
+                btnRecordOff: "वॉइस नोट रिकॉर्ड करें",
+                btnRecordOn: "रोकें और वॉइस नोट सहेजें",
+                btnMicOff: "टेक्स्ट पर माइक: बंद",
+                btnMicOn: "टेक्स्ट पर माइक: चालू"
+            },
+            ta: {
+                navTitleText: "மீட்டமைத்தல் & பிரதிபலிப்பு",
+                navSubtitleText: "மன சீரமைப்பு மற்றும் தெளிவுக்கான உங்கள் பிரத்யேக 15 நிமிட இடம்",
+                readyTitle: "தொடங்க தயாராக உள்ளது",
+                readyDesc: "வசதியான உட்காரும் நிலையைக் கண்டறிந்து, உங்கள் எண்ணங்களை நிலைநிறுத்தி, உங்கள் அமர்வைத் தொடங்க கீழே கிளிக் செய்யவும்.",
+                meditationTitle: "நினைவாற்றல் மூழ்கல்",
+                meditationDesc: "ஆழமாக சுவாசிக்கவும். உங்கள் தோள்களைத் தளர்த்தி, மூச்சுகளுக்கு இடையிலான இடைவெளியில் முழுமையாக கவனம் செலுத்துங்கள்.",
+                reflectionTitle: "படைப்பாற்றல் பிரதிபலிப்பு",
+                reflectionDesc: "உங்கள் கவனத்தை உங்கள் ஜர்னல் விட்ஜெட்டை நோக்கி மாற்றவும். உங்கள் எண்ணங்களை நேரடியாக உரையாக மாற்ற அனுமதிக்கவும்.",
+                doneTitle: "அமர்வு முடிந்தது",
+                doneDesc: "இந்த தெளிவின் நீடித்த உணர்வை உங்கள் அழகான நாளின் எஞ்சிய பகுதிக்கு எடுத்துச் செல்லுங்கள்.",
+                startBtn: "அமர்வைத் தொடங்கு",
+                pauseBtn: "இடைநிறுத்தம்",
+                resumeBtn: "தொடரவும்",
+                voiceOn: "குரல் வழிகாட்டுதல்: ஆன்",
+                voiceOff: "குரல் வழிகாட்டுதல்: ஆஃப்",
+                journalWidgetTitle: "உணர்வு ஓட்டம்",
+                placeholderText: "உங்கள் நுண்ணறிவு, உணர்வுகள் அல்லது எண்ணங்களை அவை வெளிப்படும் போது பதிவு செய்யவும்...",
+                btnRecordOff: "குரல் குறிப்பைப் பதிவுசெய்க",
+                btnRecordOn: "நிறுத்தி குரல் குறிப்பைச் சேமி",
+                btnMicOff: "உரையில் மைக்: ஆஃப்",
+                btnMicOn: "உரையில் மைக்: ஆன்"
+            }
+        };
+
+        let currentLang = 'en'; 
+        let timeLeft = 900; 
+        let isRunning = false;
+        let timerInterval = null;
+        let currentPhaseId = 'ready';
+        let audioEnabled = true;
+
+        // Core Media Asset Declarations
+        const backgroundMusic = new Audio('Background.mp3');
+        backgroundMusic.loop = true;
+        let voiceAudio = new Audio();
+
+        // 1. Separate Architecture Segment Variables: Feature 1 (Save as Voice Note)
+        let mediaRecorderInstance = null;
+        let voiceChunksArray = [];
+        let isVoiceNoteRecording = false;
+
+        // 2. Separate Architecture Segment Variables: Feature 2 (Mic on Text Box speech-to-text)
+        let speechRecognitionEngine = null;
+        let isTextDictationActive = false;
+
+        // DOM Catch Core Cache Hook Mapping
+        const timeDisplay = document.getElementById('timeDisplay');
+        const phaseTitle = document.getElementById('phaseTitle');
+        const phaseDesc = document.getElementById('phaseDesc');
+        const controlBtn = document.getElementById('controlBtn');
+        const audioToggleBtn = document.getElementById('audioToggleBtn');
+        const voiceRecordBtn = document.getElementById('voiceRecordBtn');
+        const micTextBtn = document.getElementById('micTextBtn');
+        const journalInput = document.getElementById('journalInput');
+        const charCounter = document.getElementById('charCounter');
+        const saveStatus = document.getElementById('saveStatus');
+        const videoContainer = document.getElementById('videoContainer');
+        const ambientVideo = document.getElementById('ambientVideo');
+
+        // Central Language Mutation Observer Event Handling Routine
+        function changeLanguage() {
+            const selectEl = document.getElementById('langSelect');
+            if (selectEl) currentLang = selectEl.value;
+            
+            const t = i18nLocal[currentLang];
+            
+            // Layout Titles Translation
+            document.getElementById('navTitleText').innerText = t.navTitleText;
+            document.getElementById('navSubtitleText').innerText = t.navSubtitleText;
+            document.getElementById('journalWidgetTitle').innerText = t.journalWidgetTitle;
+            journalInput.placeholder = t.placeholderText;
+
+            // Maintain Control Buttons States Mapping Lookups
+            if (isRunning) {
+                controlBtn.innerText = t.pauseBtn;
+            } else {
+                controlBtn.innerText = (timeLeft === 900 || timeLeft === 0) ? t.startBtn : t.resumeBtn;
+            }
+
+            audioToggleBtn.innerText = audioEnabled ? t.voiceOn : t.voiceOff;
+            
+            // Features Button Texts Translation states
+            voiceRecordBtn.innerText = isVoiceNoteRecording ? t.btnRecordOn : t.btnRecordOff;
+            micTextBtn.innerText = isTextDictationActive ? t.btnMicOn : t.btnMicOff;
+
+            // Live phase translations logic fallback route mapping
+            phaseTitle.innerText = t[currentPhaseId + 'Title'];
+            phaseDesc.innerText = t[currentPhaseId + 'Desc'];
+        }
+
+        function trackWritingMetrics() {
+            charCounter.innerText = `Characters: ${journalInput.value.length}`;
+            saveStatus.innerText = currentLang === 'hi' ? "स्थिति: टाइपिंग..." : (currentLang === 'ta' ? "நிலை: தட்டச்சு செய்கிறது..." : "Status: Typing...");
+            
+            clearTimeout(window.saveTimeout);
+            window.saveTimeout = setTimeout(() => {
+                // Execute persistent commit to unified system data engine context
+                DataStore.saveTextJournal("15-Minute Reset Stream Log", journalInput.value, `${Math.floor((900 - timeLeft) / 60)}m`);
+                saveStatus.innerText = currentLang === 'hi' ? "स्थिति: स्थानीय रूप से सहेजा गया" : (currentLang === 'ta' ? "நிலை: உள்நாட்டில் சேமிக்கப்பட்டது" : "Status: Saved locally");
+            }, 1200);
+        }
+
+        // --- FEATURE 1 IMPLEMENTATION: Separate Audio Canvas Voice Note Capturing File Flow ---
+        async function toggleVoiceNoteCapture() {
+            const t = i18nLocal[currentLang];
+            if (!isVoiceNoteRecording) {
+                if (isTextDictationActive) toggleTextDictationEngine(); // Shut off competing voice process
+                try {
+                    const dynamicStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    voiceChunksArray = [];
+                    mediaRecorderInstance = new MediaRecorder(dynamicStream);
+                    
+                    mediaRecorderInstance.ondataavailable = (event) => {
+                        if (event.data.size > 0) voiceChunksArray.push(event.data);
+                    };
+
+                    mediaRecorderInstance.onstop = () => {
+                        const voiceBlob = new Blob(voiceChunksArray, { type: 'audio/webm' });
+                        const dynamicAudioId = `voice_note_${Date.now()}`;
+                        
+                        // Parse Blob to Base64 String format structure for localStorage engine injection mapping
+                        const streamReader = new FileReader();
+                        streamReader.readAsDataURL(voiceBlob);
+                        streamReader.onloadend = () => {
+                            localStorage.setItem(dynamicAudioId, streamReader.result);
+                            DataStore.saveVoiceJournal(dynamicAudioId, "15-Minute Audio Recording Reflection Snippet", `${Math.floor((900 - timeLeft) / 60)}m`);
+                        };
+
+                        // Trigger user direct local asset download mapping
+                        const browserDownloadAnchor = document.createElement('a');
+                        browserDownloadAnchor.href = URL.createObjectURL(voiceBlob);
+                        browserDownloadAnchor.download = `Reset_Reflect_VoiceNote_${Date.now()}.webm`;
+                        browserDownloadAnchor.click();
+
+                        dynamicStream.getTracks().forEach(track => track.stop());
+                    };
+
+                    mediaRecorderInstance.start();
+                    isVoiceNoteRecording = true;
+                    voiceRecordBtn.innerText = t.btnRecordOn;
+                    voiceRecordBtn.classList.add('recording-active');
+                } catch (err) {
+                    console.error("Microphone hardware configuration access mapping error trace:", err);
+                }
+            } else {
+                if (mediaRecorderInstance && mediaRecorderInstance.state !== "inactive") {
+                    mediaRecorderInstance.stop();
+                }
+                isVoiceNoteRecording = false;
+                voiceRecordBtn.innerText = t.btnRecordOff;
+                voiceRecordBtn.classList.remove('recording-active');
+            }
+        }
+
+        // --- FEATURE 2 IMPLEMENTATION: Separate Mic Target Speech-To-Text Input Engine Flow ---
+        function toggleTextDictationEngine() {
+            const t = i18nLocal[currentLang];
+            const BrowserSpeechConstructor = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!BrowserSpeechConstructor) {
+                micTextBtn.style.display = 'none';
+                return;
+            }
+
+            if (!isTextDictationActive) {
+                if (isVoiceNoteRecording) toggleVoiceNoteCapture(); // Shut off competing recording process
+                
+                speechRecognitionEngine = new BrowserSpeechConstructor();
+                speechRecognitionEngine.continuous = true;
+                speechRecognitionEngine.interimResults = false;
+                
+                // Map language string locales seamlessly for recognition algorithms
+                speechRecognitionEngine.lang = currentLang === 'hi' ? 'hi-IN' : (currentLang === 'ta' ? 'ta-IN' : 'en-US');
+
+                speechRecognitionEngine.onresult = (event) => {
+                    const finalTranscribedString = event.results[event.results.length - 1][0].transcript;
+                    journalInput.value += (journalInput.value ? ' ' : '') + finalTranscribedString;
+                    trackWritingMetrics();
+                };
+
+                speechRecognitionEngine.onerror = () => { shutOffTextDictationSystem(); };
+                speechRecognitionEngine.onend = () => { shutOffTextDictationSystem(); };
+
+                speechRecognitionEngine.start();
+                isTextDictationActive = true;
+                micTextBtn.innerText = t.btnMicOn;
+                micTextBtn.classList.add('active');
+            } else {
+                shutOffTextDictationSystem();
+            }
+        }
+
+        function shutOffTextDictationSystem() {
+            const t = i18nLocal[currentLang];
+            if (speechRecognitionEngine && isTextDictationActive) {
+                speechRecognitionEngine.stop();
+            }
+            isTextDictationActive = false;
+            micTextBtn.innerText = t.btnMicOff;
+            micTextBtn.classList.remove('active');
+        }
+
+function toggleAudioTrackMode() {
+            audioEnabled = !audioEnabled;
+            const t = i18nLocal[currentLang];
+            audioToggleBtn.innerText = audioEnabled ? t.voiceOn : t.voiceOff;
+            
+            if (!audioEnabled) {
+                // Audio turned OFF: Instantly kill all audio channels
+                voiceAudio.pause();
+                backgroundMusic.pause();
+            } else {
+                // Audio turned ON: Restore tracks instantly if the session is currently active
+                if (isRunning) {
+                    // 1. Fire up the background loop
+                    backgroundMusic.play().catch(e => console.log("Ambient execution block:", e));
+                    
+                    // 2. Clear out any previous pause states and forcefully re-trigger the voice guide track
+                    if (currentPhaseId !== 'ready' && currentPhaseId !== 'done') {
+                        playCustomVoice(currentPhaseId);
+                    }
+                }
+            }
+        }
+
+        function toggleTimer() {
+            const t = i18nLocal[currentLang];
+            if (isRunning) {
+                clearInterval(timerInterval);
+                backgroundMusic.pause();
+                voiceAudio.pause();
+                ambientVideo.pause();
+                controlBtn.innerText = t.resumeBtn;
+            } else {
+                if (timeLeft === 900) {
+                    setPhase('meditation', "var(--earth-brown)");
+                } else {
+                    ambientVideo.play().catch(() => {});
+                }
+                
+                // FIXED: Only trigger the music if audio guidance/sound is enabled!
+                if (audioEnabled) {
+                    backgroundMusic.play().catch(e => console.log("Ambient execution block pending interactive sequence trace:", e));
+                }
+                
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateUI();
+                }, 1000);
+                controlBtn.innerText = t.pauseBtn;
+            }
+            isRunning = !isRunning;
+        }
+
+        function playCustomVoice(phaseId) {
+            // Check flag constraint before initializing audio playback pipeline
+            if (!audioEnabled) return;
+            
+            voiceAudio.pause();
+            // Force browser to dump the previous file memory state to guarantee a clean launch
+            voiceAudio.removeAttribute('src'); 
+            voiceAudio.load();
+            
+            // Re-allocate localized file source link matrix map
+            voiceAudio.src = `${currentLang}_${phaseId}.mp3`;
+            voiceAudio.play().catch(err => console.log("Voice guide narrative clip execution block:", err));
+        }
+
+        function triggerVideoContext(phaseId) {
+            if (phaseId === 'meditation') {
+                ambientVideo.src = 'media/meditation.mp4';
+            } else if (phaseId === 'reflection') {
+                ambientVideo.src = 'media/dump.mp4';
+            } else {
+                videoContainer.classList.remove('visible');
+                ambientVideo.pause();
+                return;
+            }
+            
+            videoContainer.classList.add('visible');
+            ambientVideo.load();
+            ambientVideo.play().catch(e => console.log("Video track pipeline pending initialization user sequence:", e));
+        }
+
+        function updateUI() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timeDisplay.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
+            if (timeLeft > 300) {
+                // Keep 5M.JPG state active during Mindful Immersion Phase
+                setPhase('meditation', "var(--earth-brown)");
+            } else if (timeLeft > 0) {
+                // Dynamically mutate global body background to 9M.JPG state for Creative Reflection Phase
+                setPhase('reflection', "var(--clay-red)");
+            } else {
+                clearInterval(timerInterval);
+                isRunning = false;
+                setPhase('done', "var(--sage-earth)");
+                controlBtn.style.display = 'none';
+                backgroundMusic.pause();
+                voiceAudio.pause();
+                shutOffTextDictationSystem();
+                if (isVoiceNoteRecording) toggleVoiceNoteCapture();
+            }
+        }
+
+        function setPhase(phaseId, color) {
+            const t = i18nLocal[currentLang];
+            if (currentPhaseId !== phaseId) {
+                currentPhaseId = phaseId;
+                phaseTitle.innerText = t[phaseId + 'Title'];
+                phaseDesc.innerText = t[phaseId + 'Desc'];
+                document.getElementById('phaseCard').style.borderLeftColor = color;
+                
+                // Trigger background shift logic explicitly
+                if (phaseId === 'reflection') {
+                    document.body.style.background = "linear-gradient(rgba(250, 247, 243, 0.15), rgba(250, 247, 243, 0.15)), url('images/9M.JPG')";
+                    document.body.style.backgroundSize = "cover";
+                    document.body.style.backgroundPosition = "center";
+                    document.body.style.backgroundAttachment = "fixed";
+                } else if (phaseId === 'meditation' || phaseId === 'ready') {
+                    document.body.style.background = "linear-gradient(rgba(250, 247, 243, 0.15), rgba(250, 247, 243, 0.15)), url('images/5M.JPG')";
+                    document.body.style.backgroundSize = "cover";
+                    document.body.style.backgroundPosition = "center";
+                    document.body.style.backgroundAttachment = "fixed";
+                }
+
+                if (phaseId !== 'done') {
+                    playCustomVoice(phaseId);
+                }
+                triggerVideoContext(phaseId);
+            }
+        }
+
+
+        // Initialize elements loading and state configurations
+        window.addEventListener('DOMContentLoaded', () => {
+            AOS.init({ duration: 1000, once: true, easing: 'power2.out' });
+            changeLanguage();
+        });
+    </script>
+</body>
+</html>

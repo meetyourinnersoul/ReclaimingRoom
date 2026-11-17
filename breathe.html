@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathe & Reflect - Conscious Breathing</title>
+    
+    <link href="https://unpkg.com/aos@2/dist/aos.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Quicksand:wght@300;400;500;600&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Contemporary Earthy Meditation Palette matched from index.html */
+        :root {
+            --glass-bg: rgba(250, 247, 243, 0.6);
+            --glass-border: rgba(180, 160, 140, 0.5);
+            --text-dark: #3a3a3a;
+            --text-light: #6b6b6b;
+            
+            /* Earthy Tones */
+            --earth-brown: #8b7355;
+            --warm-taupe: #a89968;
+            --sage-earth: #8a9a7b;
+            --clay-red: #b8735d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            /* Full-screen Fixed Canvas Background from index.html */
+            background: linear-gradient(rgba(244, 239, 233, 0.4), rgba(229, 222, 212, 0.4)), 
+                        url('images/5M.JPG') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding-bottom: 60px;
+        }
+
+        /* Top Header Utility Control Bar matching index.html */
+        .header-bar {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .lang-select {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .lang-select:hover {
+            background: rgba(250, 247, 243, 0.9);
+            border-color: var(--earth-brown);
+        }
+
+        /* Central Brand Glassmorphic Navigation Menu matching index.html */
+        .main-nav {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 15px 40px;
+            border-radius: 40px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin-bottom: 60px;
+            box-shadow: 0 8px 32px 0 rgba(139, 115, 85, 0.15);
+            z-index: 10;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .main-nav a:hover, .main-nav a.active {
+            background: var(--earth-brown);
+            color: #ffffff;
+        }
+
+        /* Shared Glassmorphism Centered Container with 9M.JPG Layer */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 750px;
+            width: 90%;
+            margin: 2vh auto 6vh auto;
+            text-align: center;
+            background: rgba(250, 247, 243, 0.65);
+            
+            /* Inner card 9M.JPG overlay layout from index.html */
+            background-image: linear-gradient(rgba(250, 247, 243, 0.85), rgba(250, 247, 243, 0.85)), url('images/9M.JPG'); 
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(180, 160, 140, 0.6);
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow: 0 12px 40px rgba(139, 115, 85, 0.1);
+            min-height: 500px;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--earth-brown);
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        /* Routine Picker Controls */
+        .routine-selector-box {
+            margin-bottom: 25px;
+        }
+
+        .select-input {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--glass-border);
+            padding: 12px 24px;
+            border-radius: 24px;
+            color: var(--text-dark);
+            font-size: 1.05rem;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        /* Core Breathing Pacer Display Elements */
+        .pacer-container {
+            height: 260px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .breathing-circle {
+            width: 120px;
+            height: 120px;
+            background: var(--sage-earth);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.3rem;
+            box-shadow: 0 0 30px rgba(138, 154, 123, 0.4);
+            transition: transform 1s linear;
+        }
+
+        .session-countdown {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--earth-brown);
+            margin: 15px 0 5px 0;
+        }
+
+        .pacer-subtext {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-weight: 500;
+            min-height: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Action Buttons */
+        button {
+            background: var(--glass-bg);
+            color: var(--text-dark);
+            border: 1px solid var(--glass-border);
+            padding: 12px 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 115, 85, 0.08);
+        }
+
+        button:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .primary-btn {
+            background: var(--earth-brown);
+            color: white;
+            border: none;
+        }
+
+        .primary-btn:hover {
+            background: var(--warm-taupe);
+        }
+
+        /* Visual Separator */
+        .divider {
+            height: 1px;
+            background: var(--glass-border);
+            margin: 40px 0 30px 0;
+            border: none;
+        }
+
+        /* Permanent Marketing Video Showcase Deck */
+        .youtube-section {
+            width: 100%;
+            text-align: center;
+        }
+
+        .youtube-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--earth-brown);
+            margin-bottom: 15px;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* Fixed 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border: 1px solid var(--glass-border);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .main-nav { padding: 15px 25px; gap: 15px; flex-wrap: wrap; justify-content: center; border-radius: 20px; }
+            .header-bar { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <select class="lang-select" id="langSelect" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+        </select>
+    </div>
+
+    <nav class="main-nav">
+        <a href="index.html" id="navHome">Home</a>
+        <a href="NewLayout.html" id="navJournal">Journal Timer</a>
+        <a href="breathe.html" id="navBreathe" class="active">Breathe</a>
+        <a href="tracker.html" id="navTracker">Tracker</a>
+        <a href="archive.html" id="navArchive">Archive</a>
+        <a href="settings.html" id="navSettings">Settings</a>
+        
+        <div id="googleBtnContainer" style="display: inline-block; align-self: center; margin-left: 10px;"></div>
+    </nav>
+
+    <div class="container" data-aos="fade-up">
+        <h1>Conscious Breathing Workspace</h1>
+        <p class="tagline">Slow down your breathing, quiet your soul.</p>
+
+        <div class="routine-selector-box">
+            <select id="routineSelect" class="select-input" onchange="applyPresetConfig()">
+                <option value="box">1. Box Breathing Reset (2 Mins)</option>
+                <option value="morning">2. Morning Kickstart (5 Mins Silence)</option>
+                <option value="midday">3. Mid-Day Reset Break (2 Mins Relax)</option>
+                <option value="sleep">4. Evening Wind-Down (Gratitude Meditation)</option>
+                <option value="hope">5. Extended Grounding (Hope Meditation)</option>
+            </select>
+        </div>
+
+        <div class="session-countdown" id="timeDisplay">02:00</div>
+
+        <div class="pacer-container">
+            <div class="breathing-circle" id="breathBall">Ready</div>
+        </div>
+        <div class="pacer-subtext" id="breathDetails">Select a workflow above and click below to begin.</div>
+        
+        <div>
+            <button class="primary-btn" id="startBtn" onclick="toggleMeditationSession()">Start Session</button>
+        </div>
+
+        <hr class="divider">
+
+        <div class="youtube-section">
+            <h3 class="youtube-title">Featured Guided Video Guide 📺</h3>
+            <div class="video-wrapper">
+                <iframe id="ytPlayer" src="https://www.youtube-nocookie.com/embed/uAV_RM2H3oM?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2/dist/aos.js"></script>
+    <script src="auth.js"></script>
+    <script>AOS.init({ duration: 1000, once: true });</script>
+
+    <script>
+        // Preset Matrix Mapping Architecture
+        const presets = {
+            box: {
+                sessionSeconds: 120,
+                hasVisualPacer: true,
+                meditationAudioFile: null,
+                useVoiceCues: true,
+                sequence: [
+                    { state: "Inhale", duration: 4, scale: 2.0, color: "var(--sage-earth)" },
+                    { state: "Hold", duration: 4, scale: 2.0, color: "var(--warm-taupe)" },
+                    { state: "Exhale", duration: 4, scale: 1.0, color: "var(--clay-red)" },
+                    { state: "Hold", duration: 4, scale: 1.0, color: "var(--earth-brown)" }
+                ]
+            },
+            morning: {
+                sessionSeconds: 300,
+                hasVisualPacer: false,
+                meditationAudioFile: null,
+                useVoiceCues: false,
+                sequence: [
+                    { state: "Silence", duration: 5, scale: 1.2, color: "var(--warm-taupe)" }
+                ]
+            },
+            midday: {
+                sessionSeconds: 120,
+                hasVisualPacer: true,
+                meditationAudioFile: null,
+                useVoiceCues: true,
+                sequence: [
+                    { state: "Inhale", duration: 4, scale: 1.8, color: "var(--sage-earth)" },
+                    { state: "Exhale", duration: 4, scale: 1.0, color: "var(--clay-red)" }
+                ]
+            },
+            sleep: {
+                sessionSeconds: 600, 
+                hasVisualPacer: true,
+                meditationAudioFile: "Gratitude_Meditation.mp3",
+                useVoiceCues: true,
+                sequence: [
+                    { state: "Inhale", duration: 4, scale: 1.7, color: "var(--sage-earth)" },
+                    { state: "Hold", duration: 7, scale: 1.7, color: "var(--warm-taupe)" },
+                    { state: "Exhale", duration: 8, scale: 1.0, color: "var(--clay-red)" }
+                ]
+            },
+            hope: {
+                sessionSeconds: 900, 
+                hasVisualPacer: true,
+                meditationAudioFile: "Hope_Meditation.mp3",
+                useVoiceCues: true,
+                sequence: [
+                    { state: "Inhale", duration: 5, scale: 1.9, color: "var(--sage-earth)" },
+                    { state: "Exhale", duration: 5, scale: 1.0, color: "var(--clay-red)" }
+                ]
+            }
+        };
+
+        let activeConfigKey = 'box';
+        let isSessionRunning = false;
+        let timeRemaining = 120;
+        
+        // Runtime Process Pointers
+        let countdownTimerInterval = null;
+        let breathingCycleTimeout = null;
+
+        // Shared Global Audio Infrastructure Channels
+        let shortCueAudio = new Audio();
+        let longMeditationAudio = new Audio();
+
+        const breathBall = document.getElementById('breathBall');
+        const breathDetails = document.getElementById('breathDetails');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const startBtn = document.getElementById('startBtn');
+
+        function formatTimeDisplay(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function applyPresetConfig() {
+            // 🔄 HARD RESET: Force-clear existing active loops and audios instantly
+            clearInterval(countdownTimerInterval);
+            clearTimeout(breathingCycleTimeout);
+            
+            shortCueAudio.pause();
+            longMeditationAudio.pause();
+            
+            isSessionRunning = false;
+            startBtn.innerText = "Start Session";
+
+            // Map and set the newly selected preset timeline parameters
+            activeConfigKey = document.getElementById('routineSelect').value;
+            timeRemaining = presets[activeConfigKey].sessionSeconds;
+            
+            // Re-render UI elements back to default clean states
+            timeDisplay.innerText = formatTimeDisplay(timeRemaining);
+            breathBall.innerHTML = "Ready";
+            breathBall.style.transform = "scale(1.0)";
+            breathBall.style.background = "var(--sage-earth)";
+            breathDetails.innerText = "Preset updated. Press Start Session to begin fresh.";
+        }
+
+        function toggleMeditationSession() {
+            if (isSessionRunning) {
+                // Instantly freeze tracking timelines
+                clearInterval(countdownTimerInterval);
+                clearTimeout(breathingCycleTimeout);
+                
+                shortCueAudio.pause();
+                longMeditationAudio.pause();
+                
+                // 🎙️ Play closing/reset cue when manuals hit pause
+                shortCueAudio.src = "Reset.mp3";
+                shortCueAudio.volume = 1.0;
+                shortCueAudio.play().catch(e => console.log("Reset audio missing or pending user gesture."));
+                
+                ampStatePaused();
+            } else {
+                isSessionRunning = true;
+                startBtn.innerText = "Pause Session";
+                
+                // 🎙️ Play custom entrance sound clip here!
+                shortCueAudio.src = "Start.mp3";
+                shortCueAudio.volume = 1.0;
+                shortCueAudio.play().catch(e => console.log("Start audio missing or pending user gesture."));
+                
+                // Initialize Long Play Ambient Meditations
+                const currentPreset = presets[activeConfigKey];
+                if (currentPreset.meditationAudioFile) {
+                    longMeditationAudio.src = currentPreset.meditationAudioFile;
+                    longMeditationAudio.loop = true;
+                    longMeditationAudio.volume = 0.4; 
+                    longMeditationAudio.play().catch(e => console.log("Meditation background track pending."));
+                }
+
+                // Fire Core Synchronized Intervals
+                startSessionCountdown();
+                
+                // Delay to give Start.mp3 clear space before vocal looping begins
+                setTimeout(() => {
+                    if (isSessionRunning) runPacerLoop();
+                }, 1000);
+            }
+        }
+
+        function ampStatePaused() {
+            breathBall.innerHTML = "Paused";
+            breathBall.style.transform = "scale(1.0)";
+            startBtn.innerText = "Resume Session";
+            isSessionRunning = false;
+        }
+
+        function startSessionCountdown() {
+            countdownTimerInterval = setInterval(() => {
+                timeRemaining--;
+                timeDisplay.innerText = formatTimeDisplay(timeRemaining);
+
+                if (timeRemaining <= 0) {
+                    // Session complete, clean up loops cleanly
+                    clearInterval(countdownTimerInterval);
+                    clearTimeout(breathingCycleTimeout);
+                    longMeditationAudio.pause();
+                    
+                    // 🎙️ Play closure audio trigger here!
+                    shortCueAudio.src = "Reset.mp3";
+                    shortCueAudio.volume = 1.0;
+                    shortCueAudio.play().catch(e => console.log("Reset audio tracking clip missing."));
+                    
+                    breathBall.innerHTML = "Peace";
+                    breathBall.style.transform = "scale(1.0)";
+                    breathBall.style.background = "var(--sage-earth)";
+                    breathDetails.innerText = "Your practice is complete. Namaste.";
+                    startBtn.innerText = "Start New Session";
+                    isSessionRunning = false;
+                    timeRemaining = presets[activeConfigKey].sessionSeconds;
+                }
+            }, 1000);
+        }
+
+        function runPacerLoop() {
+            const currentPreset = presets[activeConfigKey];
+            const steps = currentPreset.sequence;
+            let currentStepIdx = 0;
+
+            function executeCycleStep() {
+                if (!isSessionRunning) return;
+
+                let currentStep = steps[currentStepIdx];
+
+                if (currentPreset.hasVisualPacer) {
+                    breathBall.innerHTML = currentStep.state;
+                    breathBall.style.background = currentStep.color;
+                    breathBall.style.transition = `transform ${currentStep.duration}s linear, background-color 0.5s ease`;
+                    breathBall.style.transform = `scale(${currentStep.scale})`;
+                    breathDetails.innerText = `Focus on your breathing pattern...`;
+                    
+                    // Trigger custom dynamic voice transition scripts
+                    if (currentPreset.useVoiceCues) {
+                        shortCueAudio.src = `${currentStep.state}.M4A`;
+                        shortCueAudio.volume = 1.0;
+                        shortCueAudio.play().catch(e => console.log("Cue audio tracking clip missing or pending."));
+                    }
+                } else {
+                    // Morning Kickstart / Pure Silence Config Layouts
+                    breathBall.innerHTML = "Quiet";
+                    breathBall.style.transform = "scale(1.1)";
+                    breathBall.style.background = "var(--warm-taupe)";
+                    breathDetails.innerText = "Embrace the silence. Sit comfortably with your thoughts.";
+                }
+
+                currentStepIdx = (currentStepIdx + 1) % steps.length;
+                breathingCycleTimeout = setTimeout(executeCycleStep, currentStep.duration * 1000);
+            }
+
+            executeCycleStep();
+        }
+    </script>
+</body>
+</html>
